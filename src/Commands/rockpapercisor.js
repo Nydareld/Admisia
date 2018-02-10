@@ -1,5 +1,4 @@
 const enums = require("../Enums.js");
-const bot = require("../bot.js");
 
 function Run(client, message, args){
 
