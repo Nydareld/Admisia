@@ -17,9 +17,8 @@ let defaultConfig = {
 class Bot {
 
     constructor(config){
-        this.config = Object.assign({}, config, defaultConfig );;
+        this.config = Object.assign({}, defaultConfig,config );;
         this.client = new Discord.Client();
-
         this.setState( enums.state.idle );
 
         this.commands = {};
@@ -37,42 +36,33 @@ class Bot {
     }
 
     loadClientEvents(){
-        this.client.on("ready", this.sendReady );
-        this.client.on("message", this.processMessage );
+        this.client.on("ready", this.sendReady.bind(this) );
+        this.client.on("message", this.processMessage.bind(this) );
     }
 
     processMessage(message){
-        let command = this.commands[command];
-        command.run(client, message, args);
 
-        // if(message.author.bot || message.content.indexOf(this.config.prefix) != 0){
-        //     return;
-        // }
-        //
-        // let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-        //
-        // let commandName = args.shift().toLowerCase();
-        //
-        // let command = this.commands[command];
-        //
-        // if(!command){
-        //     return;
-        // }
-        //
-        // try{
-        //     switch(this.state){
-        //         case enums.state.waitingUsersInput :
-        //             if()
-        //             command.actionsBuffer.push(message);
-        //             break;
-        //
-        //         default :
-        //             if(this.commands[command]){
-        //                 this.commands[command].run(client, message, args);
-        //             }
-        //             break;
-        //
-        //   }
+        if(message.author.bot || message.content.indexOf(this.config.prefix) != 0){
+            return;
+        }
+
+        let args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
+
+        if(this.state =  enums.state.waitingUsersInput ){
+
+            this.currentCommand(this, message)
+
+        }else {
+
+            let commandName = args.shift().toLowerCase();
+            let command = this.commands[commandName];
+            if( !command ){
+                return;
+            }else {
+                command.run(this, message, args);
+            }
+
+        }
 
     }
 
