@@ -48,9 +48,9 @@ class Bot {
 
         let args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
 
-        if(this.state =  enums.state.waitingUsersInput ){
+        if(this.state == enums.state.waitingUsersInput ){
 
-            this.currentCommand(this, message)
+            this.reply(this, message,args);
 
         }else {
 
@@ -64,6 +64,16 @@ class Bot {
 
         }
 
+    }
+
+    takeControl(callback){
+        this.reply = callback;
+        this.state = enums.state.waitingUsersInput;
+    }
+
+    releaseControl(){
+        this.reply = null;
+        this.state = enums.state.idle;
     }
 
     sendReady(){
