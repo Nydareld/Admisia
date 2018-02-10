@@ -5,10 +5,11 @@ let ucfirst = require("./utils/ucfirst.js");
 
 let defaultConfig = {
     "commands" : {
-        "ping" : true,
-        "reload" : true,
-        "roulette" : true,
-        "rockpapercisor" : true
+        "decris" : true
+        // "ping" : true,
+        // "reload" : true,
+        // "roulette" : true,
+        // "rockpapercisor" : true
     },
     "prefix" : "!"
 };
@@ -31,8 +32,10 @@ class Bot {
     }
 
     registerCommands(){
-        for (var commandName in this.config.commands) {
-            this.commands[commandName] = require("./Commands/"+ ucfirst(commandName) + ".js");
+        let commandClass, commandName;
+        for (commandName in this.config.commands) {
+            commandClass = require("./Commands/"+ ucfirst(commandName) + ".js");
+            this.commands[commandName] = new commandClass(this.config.commands[commandName],this);
         }
     }
 
@@ -51,7 +54,7 @@ class Bot {
 
         if(this.state == enums.state.waitingUsersInput ){
 
-            this.reply(this, message,args);
+            this.reply(message,args);
 
         }else {
 
@@ -60,7 +63,7 @@ class Bot {
             if( !command ){
                 return;
             }else {
-                command.run(this, message, args);
+                command.run(message, args);
             }
 
         }
