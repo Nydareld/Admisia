@@ -1,5 +1,5 @@
 exports.run = (client, message, args) => {
-    
+
         message.delete(100).catch(console.error());
 
         author = message.author.username;
@@ -13,4 +13,3 @@ exports.run = (client, message, args) => {
             message.channel.send("\*PAN\* " + author + " est retrouvé(e) mort(e) dans le chat");
         }
     }
-    
