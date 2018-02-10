@@ -1,6 +1,7 @@
 let Discord = require("discord.js");
 let fs = require("fs");
 let enums = require("./Enums.js");
+let ucfirst = require("./utils/ucfirst.js");
 
 let defaultConfig = {
     "commands" : {
@@ -31,7 +32,7 @@ class Bot {
 
     registerCommands(){
         for (var commandName in this.config.commands) {
-            this.commands[commandName] = require("./Commands/"+ commandName + ".js");
+            this.commands[commandName] = require("./Commands/"+ ucfirst(commandName) + ".js");
         }
     }
 
