@@ -1,4 +1,5 @@
 {
+    "master" : true,
     "decris": {
         "guy": [
             [
@@ -22,7 +23,9 @@
             [
                 "humide",
                 "brut",
-                "luisant"
+                "luisant",
+                "sale",
+                "gras"
             ]
         ]
     }
