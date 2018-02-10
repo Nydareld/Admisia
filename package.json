@@ -1,13 +1,16 @@
 {
-  "name": "greeter-bot",
-  "version": "1.0.0",
-  "description": "My own Discord bot",
-  "main": "bot.js",
-  "author": "YOUR-NAME-HERE",
-  "dependencies": {
-    "discord.io": "^2.5.3",
-    "discord.js": "^11.3.0",
-    "fs": "0.0.1-security",
-    "winston": "^2.4.0"
-  }
+    "name": "greeter-bot",
+    "version": "1.0.0",
+    "description": "My own Discord bot",
+    "main": "bot.js",
+    "contributors": [
+        "Nydareld theo.guerin.pro@gmail.com ( https://github.com/Nydareld )",
+        "ICantIHavePoney ( https://github.com/ICantIHavePoney )"
+    ],
+    "dependencies": {
+        "discord.io": "^2.5.3",
+        "discord.js": "^11.3.0",
+        "fs": "0.0.1-security",
+        "winston": "^2.4.0"
+    }
 }
