@@ -8,12 +8,11 @@ class Decris extends AbstractCommand {
 
         }else if(this.config[args[0]]){
             response = this.oneCase(this.config[args[0]]);
-            console.log(response);
         }else {
             response = "Rien n'est configuré pour cette personne";
         }
 
-        message.channel.send(response).catch(console.error);
+        message.channel.send(response).catch((err) => {console.log("err",err);});
     }
 
     oneCase(arr){
