@@ -7,6 +7,9 @@
         "Nydareld theo.guerin.pro@gmail.com ( https://github.com/Nydareld )",
         "ICantIHavePoney ( https://github.com/ICantIHavePoney )"
     ],
+    "scripts" : {
+        "start" : "node index.js"
+    },
     "dependencies": {
         "discord.io": "^2.5.3",
         "discord.js": "^11.3.0",
