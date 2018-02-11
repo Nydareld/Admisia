@@ -5,7 +5,7 @@ class Decris extends AbstractCommand {
     run(message, args){
         let response;
         if( args[0] == "ajout"){
-
+            response = this.add(args);
         }else if(this.config[args[0]]){
             response = this.oneCase(this.config[args[0]]);
         }else {
@@ -13,6 +13,22 @@ class Decris extends AbstractCommand {
         }
 
         message.channel.send(response).catch((err) => {console.log("err",err);});
+    }
+
+    add(args){
+        if(args.length < 4){
+            return 'Il manque des arguments a votre comande. la syntaxe est la suivante : !decris ajout <nom> <emplacement des mot> <mots>';
+        }else if(args[2] > 3){
+            return "L'emplacement ne peut pas etre superieur à 3";
+        }else{
+            if(!this.config[args[1]]){
+                this.config[args[1]] = [[],[],[]];
+            }
+            let mots = args.splice(3, args.length ).join(" ")
+            this.config[args[1]][(args[2]*1)-1].push(mots);
+            return '"'+mots+'" ont bien étés ajoutés a '+args[1];
+        }
+
     }
 
     oneCase(arr){
