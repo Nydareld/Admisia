@@ -14,7 +14,10 @@ try {
 let config = Object.assign({},botConfig,authConfig);
 config.commands = commands;
 
-if(!config.discord.token){
+if(!config.discord ){
+    config.discord = {};
+}
+if (!config.discord.token) {
     config.discord.token = process.env.DISCORD_TOKEN;
 }
 
