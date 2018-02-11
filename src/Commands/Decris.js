@@ -44,6 +44,19 @@ class Decris extends AbstractCommand {
         }
     }
 
+    imports(args){
+        if(args.length < 3){
+            return 'Il manque des arguments a votre comande. la syntaxe est la suivante : !decris export <nom> <configuration précédement exportée>';
+        }
+        try {
+            this.config[args[1]] = JSON.parse( args.splice(2, args.length ).join(" ") );
+            return "La configuration a bien été importée";
+        } catch (e) {
+            console.log(e);
+            return "Il semble qu'il y ait une erreur de configuration";
+        }
+    }
+
     oneCase(arr){
         let cases = this.allPossibleCases(arr);
 
