@@ -6,6 +6,10 @@ class Decris extends AbstractCommand {
         let response;
         if( args[0] == "ajout"){
             response = this.add(args);
+        }else if( args[0] == "export"){
+            response = this.exports(args);
+        }else if( args[0] == "import"){
+            response = this.imports(args);
         }else if(this.config[args[0]]){
             response = this.oneCase(this.config[args[0]]);
         }else {
@@ -29,6 +33,15 @@ class Decris extends AbstractCommand {
             return '"'+mots+'" ont bien étés ajoutés a '+args[1];
         }
 
+    }
+
+
+    exports(args){
+        if(args.length < 2){
+            return 'Il manque des arguments a votre comande. la syntaxe est la suivante : !decris export <nom>';
+        }else {
+            return JSON.stringify(this.config[args[1]]);
+        }
     }
 
     oneCase(arr){
