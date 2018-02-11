@@ -1,5 +1,5 @@
 {
-    "master" : true,
+    "master": true,
     "decris": {
         "guy": [
             [
@@ -26,6 +26,23 @@
                 "luisant",
                 "sale",
                 "gras"
+            ]
+        ],
+        "yaroph": [
+            [
+                "streamer",
+                "serveur au macdo",
+                "victime de LDLC"
+            ],
+            [
+                "sans pc",
+                "à chemise a carraux",
+                "qui reveil sa coloc"
+            ],
+            [
+                "et fan de jul",
+                "et fan de lagaf",
+                "qui dors ivre chez des inconues"
             ]
         ]
     }
