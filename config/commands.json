@@ -1,4 +1,5 @@
 {
+    "ping" : true,
     "master": true,
     "decris": {
         "guy": [

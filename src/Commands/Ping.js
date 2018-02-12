@@ -1,5 +1,10 @@
-exports.run = (client, message, args) => {
+let AbstractCommand = require ("../AbstractCommand.js");
 
-    //message.delete(1000).catch(console.error());
-    message.channel.send("pong!").catch(console.error);
+class Ping extends AbstractCommand {
+
+    run(message, args){
+        message.channel.send("pong!").catch(console.error);
+    }
 }
+
+module.exports = Ping;
