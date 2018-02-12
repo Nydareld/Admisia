@@ -11,7 +11,10 @@ class Bot {
         this.loadConfig(config)
         .then(this.connectExternals.bind(this))
         .then(this.setDefaultState.bind(this))
-        .then(this.registerCommands.bind(this));
+        .then(this.registerCommands.bind(this))
+        .then(() => {
+            console.log("5 bot initialisé");
+        });
 
     }
 
@@ -71,17 +74,20 @@ class Bot {
 
     registerCommands(){
         console.log("4 Registering commands");
-        let me = this;
+        let me = this,
+        promises = [];
         me.commands = {};
-        return new Promise(function(resolve, reject) {
-            let commandClass, commandName;
-            for (commandName in me.config.commands) {
-                commandClass = require("./Commands/"+ ucfirst(commandName) + ".js");
-                me.commands[commandName] = new commandClass(me.config.commands[commandName],me);
-            }
-            resolve(me);
 
-        });;
+        let commandClass, commandName;
+        for (commandName in me.config.commands) {
+            commandClass = require("./Commands/"+ ucfirst(commandName) + ".js");
+            me.commands[commandName] = new commandClass(me.config.commands[commandName],commandName,me);
+            promises.push(me.commands[commandName].initialised.then((command) => {
+                console.log(command.name+" initialised");
+            }));
+        }
+        return Promise.all(promises);
+
     }
 
     loadClientEvents(){
