@@ -2,6 +2,7 @@ let Discord = require("discord.js");
 let fs = require("fs");
 let enums = require("./Enums.js");
 let ucfirst = require("./utils/ucfirst.js");
+let mongoose = require('mongoose');
 
 let defaultConfig = {
     "commands" : {
@@ -19,16 +20,36 @@ let defaultConfig = {
 class Bot {
 
     constructor(config){
+
+        console.log("Starting bot");
         this.config = Object.assign({}, defaultConfig,config );;
+
+        console.log("Connecting to external systems");
+        this.connectMongo();
         this.client = new Discord.Client();
-        this.setState( enums.state.idle );
-
-        this.commands = {};
-        this.registerCommands();
         this.loadClientEvents();
-
         this.loginClient();
 
+        console.log("Setting bot state");
+        this.setState( enums.state.idle );
+
+        console.log("Registering commands");
+        this.commands = {};
+        this.registerCommands();
+
+    }
+
+    connectMongo(){
+        let me = this;
+        mongoose.connect(me.config.mongo.url);
+        me.dbConnection = mongoose.connection;
+        me.dbConnection.on('error', console.error.bind(console, 'connection error:'));
+        me.dbInitialized = new Promise(function(resolve) {
+            me.dbConnection.once('open', function() {
+                console.log("Mongo connected");
+                resolve(true);
+            });
+        });
     }
 
     registerCommands(){
@@ -40,7 +61,14 @@ class Bot {
     }
 
     loadClientEvents(){
-        this.client.on("ready", this.sendReady.bind(this) );
+        let me = this;
+        me.discordInitialized = new Promise(function(resolve) {
+            me.client.on("ready", ()=>{
+                console.log("Discord ready");
+                resolve(true);
+            });
+        }).catch((err) => {console.log(err);});
+
         this.client.on("message", this.processMessage.bind(this) );
     }
 
@@ -80,17 +108,13 @@ class Bot {
         this.state = enums.state.idle;
     }
 
-    sendReady(){
-        console.log("I am ready!");
-    }
-
     setState(state){
         // mise dans une fonction pour eventuelement changer le comportement
         this.state = state;
     }
 
     loginClient(){
-        this.client.login(this.config.discord.token);
+        this.client.login(this.config.discord.token).then((value) => {console.log("Discord logged");});
     }
 
 }

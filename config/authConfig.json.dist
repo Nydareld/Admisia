@@ -1,5 +1,8 @@
 {
     "discord" : {
-        "token": "Yout token here"
+        "token": "<Your token here>"
+    },
+    "mongo" : {
+        "url" : "mongodb://<Your mongo host>/<your mongo database>"
     }
 }
