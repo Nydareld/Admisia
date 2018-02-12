@@ -4,39 +4,56 @@ let enums = require("./Enums.js");
 let ucfirst = require("./utils/ucfirst.js");
 let mongoose = require('mongoose');
 
-let defaultConfig = {
-    "commands" : {
-        "decris" : true
-        // "ping" : true,
-        // "reload" : true,
-        // "roulette" : true,
-        // "rockpapercisor" : true
-    },
-    "prefix" : "!"
-};
-
-
-
 class Bot {
 
     constructor(config){
 
-        console.log("Starting bot");
-        this.config = Object.assign({}, defaultConfig,config );;
+        this.loadConfig(config)
+        .then(this.connectExternals.bind(this))
+        .then(this.setDefaultState.bind(this))
+        .then(this.registerCommands.bind(this));
 
-        console.log("Connecting to external systems");
-        this.connectMongo();
-        this.client = new Discord.Client();
-        this.loadClientEvents();
-        this.loginClient();
+    }
 
-        console.log("Setting bot state");
-        this.setState( enums.state.idle );
+    loadConfig(config){
+        console.log("1 loading configuration");
 
-        console.log("Registering commands");
-        this.commands = {};
-        this.registerCommands();
+        let me = this,
+        defaultConfig = {
+            "commands" : {
+                "decris" : true
+                // "ping" : true,
+                // "reload" : true,
+                // "roulette" : true,
+                // "rockpapercisor" : true
+            },
+            "prefix" : "!"
+        };
 
+        return new Promise(function(resolve) {
+            me.config = Object.assign({}, defaultConfig,config );
+            resolve();
+        });
+    }
+
+    connectExternals(){
+        let me = this;
+
+        console.log("2 Connecting to external systems");
+        me.connectMongo();
+        me.client = new Discord.Client();
+        me.loadClientEvents();
+        me.loginClient();
+
+        return Promise.all([
+            me.dbInitialized,
+            me.discordInitialized
+        ]);
+    }
+
+    setDefaultState(){
+        console.log("3 Setting bot state");
+        return this.setState( enums.state.idle );
     }
 
     connectMongo(){
@@ -53,11 +70,18 @@ class Bot {
     }
 
     registerCommands(){
-        let commandClass, commandName;
-        for (commandName in this.config.commands) {
-            commandClass = require("./Commands/"+ ucfirst(commandName) + ".js");
-            this.commands[commandName] = new commandClass(this.config.commands[commandName],this);
-        }
+        console.log("4 Registering commands");
+        let me = this;
+        me.commands = {};
+        return new Promise(function(resolve, reject) {
+            let commandClass, commandName;
+            for (commandName in me.config.commands) {
+                commandClass = require("./Commands/"+ ucfirst(commandName) + ".js");
+                me.commands[commandName] = new commandClass(me.config.commands[commandName],me);
+            }
+            resolve(me);
+
+        });;
     }
 
     loadClientEvents(){
@@ -109,8 +133,12 @@ class Bot {
     }
 
     setState(state){
-        // mise dans une fonction pour eventuelement changer le comportement
-        this.state = state;
+        let me = this;
+        return new Promise(function(resolve, reject) {
+            // mise dans une fonction pour eventuelement changer le comportement
+            me.state = state;
+            resolve(me);
+        });
     }
 
     loginClient(){
