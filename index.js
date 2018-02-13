@@ -23,8 +23,9 @@ if (!config.discord.token) {
 if(!config.mongo ){
     config.mongo = {};
 }
+console.log("toto");
 if (!config.mongo.url) {
-    config.mongo.url = process.env.MONGO_URL;
+    config.mongo.url = process.env.MONGODB_ADDON_URI;
 }
 
 const http = require('http');
