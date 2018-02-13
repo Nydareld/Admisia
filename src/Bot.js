@@ -77,6 +77,7 @@ class Bot {
         let me = this,
         promises = [];
         me.commands = {};
+        me.pregs = [];
 
         let commandClass, commandName;
         for (commandName in me.config.commands) {
@@ -104,11 +105,22 @@ class Bot {
 
     processMessage(message){
 
-        if(message.author.bot || message.content.indexOf(this.config.prefix) != 0){
+        if(message.author.bot){
             return;
         }
 
         let args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
+
+        for (var pregPatern of this.pregs) {
+            if (pregPatern.preg.exec(message)) {
+                pregPatern.callback(message, args);
+                return ;
+            }
+        }
+
+        if( message.content.indexOf(this.config.prefix) != 0){
+            return;
+        }
 
         if(this.state == enums.state.waitingUsersInput ){
 
@@ -149,6 +161,13 @@ class Bot {
 
     loginClient(){
         this.client.login(this.config.discord.token).then((value) => {console.log("Discord logged");});
+    }
+
+    addPreg(preg,callback){
+        this.pregs.push({
+            "preg" : new RegExp(preg),
+            callback
+        });
     }
 
 }
