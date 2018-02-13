@@ -1,6 +1,7 @@
 {
     "ping" : true,
     "master": true,
+    "patern": true,
     "decris": {
         "guy": [
             [
