@@ -2,12 +2,12 @@ let Bot = require("./src/Bot.js");
 let botConfig = require("./config/config.json");
 let commands = require("./config/commands.json");
 
-let authConfig
+let authConfig;
 
 try {
     authConfig = require("./config/authConfig.json");
 } catch (e) {
-    authConfig={}
+    authConfig={};
 }
 
 
@@ -20,7 +20,12 @@ if(!config.discord ){
 if (!config.discord.token) {
     config.discord.token = process.env.DISCORD_TOKEN;
 }
-
+if(!config.mongo ){
+    config.mongo = {};
+}
+if (!config.mongo.url) {
+    config.mongo.url = process.env.MONGO_URL;
+}
 
 const http = require('http');
 const server = http.createServer((request, response) => {
