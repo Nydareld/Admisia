@@ -5,7 +5,7 @@ class Roulette extends AbstractCommand {
 
     run(message, args){
 
-        message.delete(100).catch(console.error());
+        message.delete(300).catch(console.error());
 
         let author = message.author.username;
 
