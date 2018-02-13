@@ -1,6 +1,8 @@
 {
     "ping" : true,
-    "roulette" : true,
+    "roulette" : {
+        "barillet" : 3
+    },
     "master": true,
     "patern": true,
     "decris": {
