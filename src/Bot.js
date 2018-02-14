@@ -105,9 +105,9 @@ class Bot {
 
     processMessage(message){
 
-        if(message.author.bot){
-            return;
-        }
+        // if(message.author.bot){
+        //     return;
+        // }
 
         let args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
 
