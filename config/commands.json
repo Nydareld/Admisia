@@ -1,5 +1,19 @@
 {
     "ping" : true,
+    "sv" : {
+        "templates" : [
+            "Hé ${u1}, il y a ${u2} qui veut de déclarer sa flamme en privé !",
+            "${u2}, il y a ${u1} qui trouves que tu es le soleil de ses nuits !",
+            "${u1} rougit terriblement en pensant à ${u2} !",
+            "${u2} remplit les pensées de ${u1} !",
+            "${u1} n'est pas insensible aux avances de ${u2} !",
+            "Fait gaffe ${u1}, je crois que ${u2} veut t'ouvrir les fesses...",
+            "${u1} ! Lâche tes mouchoirs, ${u2} a une terrible envie de toi !",
+            "${u1} et ${u2}, votre chambre d'hôtel a bien été réservé, cordialement, la réception.",
+            "${u1} si tu étais une patisserie, ${u2} deviendrait diabétique à force de te croquer",
+            "${u1}, fermes les yeux, ${u2} te jutes dessus"
+        ]
+    },
     "roulette" : {
         "barillet" : 3
     },
