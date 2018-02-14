@@ -11,7 +11,13 @@
             "${u1} ! Lâche tes mouchoirs, ${u2} a une terrible envie de toi !",
             "${u1} et ${u2}, votre chambre d'hôtel a bien été réservé, cordialement, la réception.",
             "${u1} si tu étais une patisserie, ${u2} deviendrait diabétique à force de te croquer",
-            "${u1}, fermes les yeux, ${u2} te jutes dessus"
+            "${u1}, fermes les yeux, ${u2} te jutes dessus",
+            "${u2} gare à toi, ${u1} te tourne autour...",
+            "Dis moi ${u2} , pourquoi tu as des images de ${u1} tout nu ?",
+            "${u2} te baisse pas, ${u1} est derrière toi !",
+            "Quand ${u2} est là, ${u1} se sent comme un morpion au salon de la moquette",
+            "Bah alors ${u1}, pourquoi tu agites ta main sous ton bureau en criant ${u2} ?",
+            "En chine ils ont le Ying et le Yang. Ici on a ${u2} et ${u1}."
         ]
     },
     "roulette" : {
