@@ -28,6 +28,7 @@ if (!config.mongo.url) {
     config.mongo.url = process.env.MONGODB_ADDON_URI;
 }
 
+
 const http = require('http');
 const server = http.createServer((request, response) => {
   response.writeHead(200, {"Content-Type": "text/plain"});
