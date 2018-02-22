@@ -1,5 +1,6 @@
 {
     "ping" : true,
+    "les2000" : true,
     "malou" : {
         "sizes" : {
             "xs" : 1,
