@@ -2,6 +2,9 @@
     "discord" : {
         "token": "<Your token here>"
     },
+    "github" : {
+         "token": "<Your token here>"
+    },
     "mongo" : {
         "url" : "mongodb://<Your mongo host>/<your mongo database>"
     }
