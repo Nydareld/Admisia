@@ -85,20 +85,64 @@ class Github extends AbstractCommand {
     }
 
     issues(message, args){
-        var me=this;
+        var me=this,repos=[];
         me.nrcom.getRepos()
         .then((res) => {
-            me.gitHubClient.getIssues(res.data[0].owner.login,res.data[0].name).listLabels().then((res) => {
-                console.log(res.data);
-                res.data = res.data.map(function(issue){
-                    return {
-                        name: issue.name,
-                        color:issue.color
-                    };
+            let promises = res.data.map((repo) => {
+                repos.push({name:repo.name,url:repo.issues_url.split('{')[0]});
+                return new Promise(function(resolve, reject) {
+                    me.gitHubClient.getIssues(repo.owner.login,repo.name).listLabels().then((res) => {
+                        let issues = res.data.map(function(issue){
+                            var issue = {
+                                name: issue.name,
+                                repos: {
+
+                                },
+                                color:issue.color
+                            };
+                            issue.repos[repo.name]= {
+                                url : repo.url,
+                                name : repo.name
+                            };
+                            return issue;
+                        });
+
+                        resolve({
+                            name:repo.name,
+                            url:repo.issues_url.split('{')[0],
+                            issues
+                        });
+
+                    });
+
                 });
 
-                message.channel.send("```js\n"+ me.format(res.data) +"```").catch(console.error);
+            });
 
+            Promise.all(promises).then((arrIssues) => {
+                console.log(JSON.stringify(arrIssues));
+                let issues = {},issue;
+
+                for (var i = 0; i < arrIssues.length; i++) {
+                    for (var j = 0; j < arrIssues[i].issues.length; j++) {
+                        issue = arrIssues[i].issues[j];
+                        if(!issues[issue.name]){
+                            issues[issue.name] = issue;
+                        }else {
+                            issues[issue.name].repos[arrIssues[i].name]=issue.repos;
+                        }
+                    }
+                }
+
+                // for (var i = 0; i < issues.length; i++) {
+                //     issue = issues[i];
+                //     for (var j = 0; j < repos.length; j++) {
+                //         repo = repos[j];
+                //         if(issues){
+                //
+                //         }
+                //     }
+                // }
             });
 
         });
