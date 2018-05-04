@@ -42,7 +42,6 @@ class Github extends AbstractCommand {
                 let repo = this.gitHubClient.getRepo(res.data[i].owner.login,res.data[i].name);
                 repo.listBranches().then((res) => {
                     res.data.map((item) => {
-                        console.log(item.name);
                         if(me.toProtect[item.name]){
                             repo.getBranch(item.name).then((value) => {
                                 unirest.put(value.data.protection_url)
@@ -71,8 +70,6 @@ class Github extends AbstractCommand {
                                         teams : ["owners"],
                                     }
                                 }).end(function (response) {
-                                    console.log(repo.__fullname);
-                                    console.log(response.body);
                                 });
                             });
                         }
@@ -110,6 +107,9 @@ class Github extends AbstractCommand {
                         resolve({
                             name:repo.name,
                             url:repo.issues_url.split('{')[0],
+                            labels_url:repo.labels_url.split('{')[0],
+
+
                             issues
                         });
 
@@ -120,31 +120,91 @@ class Github extends AbstractCommand {
             });
 
             Promise.all(promises).then((arrIssues) => {
-                console.log(JSON.stringify(arrIssues));
                 let issues = {},issue;
+                let repos = [];
 
                 for (var i = 0; i < arrIssues.length; i++) {
+                    repos.push({
+                        name:arrIssues[i].name,
+                        labels_url:arrIssues[i].labels_url
+                    });
                     for (var j = 0; j < arrIssues[i].issues.length; j++) {
                         issue = arrIssues[i].issues[j];
                         if(!issues[issue.name]){
-                            issues[issue.name] = issue;
-                        }else {
-                            issues[issue.name].repos[arrIssues[i].name]=issue.repos;
+                            issues[issue.name] = {
+                                name : issue.name,
+                                color : issue.color
+                            };
                         }
                     }
                 }
+                var promis=[];
+                for (var i = 0; i < repos.length ; i++) {
+                    promis.push(me.updateAllIssues(repos[i],issues));
+                }
+                Promise.all(promis).then(function(res) {
 
-                // for (var i = 0; i < issues.length; i++) {
-                //     issue = issues[i];
-                //     for (var j = 0; j < repos.length; j++) {
-                //         repo = repos[j];
-                //         if(issues){
-                //
-                //         }
-                //     }
-                // }
+                });
             });
 
+        });
+    }
+
+    updateAllIssues(repo,issues){
+        let me = this;
+        return new Promise(function(resolve, reject){
+            for (var issue in issues) {
+                if (issues.hasOwnProperty(issue)) {
+                    me.threatIssue(repo.labels_url,issues[issue]);
+                }
+            }
+
+
+        });
+    }
+
+    threatIssue(url,issue){
+        let me=this;
+        console.log(url,issue);
+        unirest.get(url+"/"+issue.name)
+        .headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'token '+me.auth.token,
+            'User-Agent': 'Nydas bot'
+        }).end(function (response) {
+            console.log(response.status);
+            if( response.status == 404 ){
+                let mysuperissue = {
+                    name : issue.name,
+                    color : issue.color
+                };
+                console.log("post" ,mysuperissue);
+                unirest.post(url)
+                .headers({
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'token '+me.auth.token,
+                    'User-Agent': 'Nydas bot'
+                }).send(mysuperissue).end(function(res){
+                    console.log(res.body);
+                });
+            }else {
+                let mysuperissue = {
+                    name : issue.name,
+                    color : issue.color
+                };
+                console.log("patch" ,mysuperissue);
+                unirest.patch(url+"/"+issue.name)
+                .headers({
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'token '+me.auth.token,
+                    'User-Agent': 'Nydas bot'
+                }).send(mysuperissue).end(function(res){
+                    console.log(res.body);
+                });
+            }
         });
     }
 
