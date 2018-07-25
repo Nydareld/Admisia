@@ -37,7 +37,24 @@
         "barillet" : 3
     },
     "master": true,
-    "patern": true,
+    "patern": [
+        {
+            "preg": "osblc",
+            "message": "https://www.youtube.com/watch?v=XoDY9vFAaG8"
+        },{
+            "preg": "cul",
+            "message": "https://www.youtube.com/watch?v=aeePeVUW6-k"
+        },{
+            "preg": "unicorn",
+            "message": "https://www.youtube.com/watch?v=qRC4Vk6kisY"
+        },{
+            "preg": "mamba\\sles\\s?couilles",
+            "message": "https://cdn.discordapp.com/attachments/410397792167526422/412612076670812162/DFg0x2uWsAA0RNK.png"
+        },{
+            "preg": "samba\\sles\\s?couilles",
+            "message": "https://cdn.discordapp.com/attachments/351809045067202572/413042760841691156/unknown.png"
+        }
+    ],
     "decris": {
         "guy": [
             [
