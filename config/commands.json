@@ -54,6 +54,9 @@
         },{
             "preg": "samba\\sles\\s?couilles",
             "message": "https://cdn.discordapp.com/attachments/351809045067202572/413042760841691156/unknown.png"
+        },{
+            "preg" : "sparrow", 
+            "message" : "https://youtu.be/YHi1stAtzlQ"
         }
     ],
     "decris": {
