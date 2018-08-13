@@ -42,7 +42,7 @@
             "preg": "osblc",
             "message": "https://www.youtube.com/watch?v=XoDY9vFAaG8"
         },{
-            "preg": "cul",
+            "preg": "avec\\sle\\scul",
             "message": "https://www.youtube.com/watch?v=aeePeVUW6-k"
         },{
             "preg": "unicorn",
