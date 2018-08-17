@@ -62,6 +62,9 @@
         },{
             "preg": "kebab",
             "message": "http://www.gif-maniac.com/gifs/41/40878.gif"
+        },{
+            "preg": "lundi\\smatin",
+            "message": "https://www.youtube.com/watch?v=ZYvCi4ZxvIA"
         }
     ],
     "decris": {
