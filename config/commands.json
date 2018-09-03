@@ -68,6 +68,9 @@
         },{
             "preg": "rigolo",
             "message": "https://www.youtube.com/watch?v=OYz_BD3I9w0"
+        },{
+            "preg": "run",
+            "message": "https://www.youtube.com/watch?v=2qm7b1GCQ74"
         }
     ],
     "decris": {
