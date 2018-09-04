@@ -10,8 +10,23 @@ class Github extends AbstractCommand {
         this.connectGithub();
         this.toProtect = {
             master : true,
-            prod : true
+            prod : true,
+            qual : true,
+
         };
+        this.toProtectRepos = [
+            "front-error-manager",
+            "nrcom-jsreport",
+            "nrcom-keycloak",
+            "nrcom-ws-adgen",
+            "nrcom-ws-commerce",
+            "nrcom-ws-compta",
+            "nrcom-ws-error",
+            "nrcom-ws-inbox",
+            "nrcom-ws-presse",
+            "pl-backoffice",
+            "pl-frontoffice"
+        ]
     }
 
     connectGithub(){
@@ -19,7 +34,7 @@ class Github extends AbstractCommand {
             token: this.bot.config.github.token
         };
         this.gitHubClient = new GitHub(this.auth);
-        this.nrcom = this.gitHubClient.getOrganization('NRcommunication');
+        this.nrcom = this.gitHubClient.getOrganization('NRCO');
 
     }
 
@@ -40,41 +55,43 @@ class Github extends AbstractCommand {
         .then((res) => {
             for (var i = 0; i < res.data.length; i++) {
                 let repo = this.gitHubClient.getRepo(res.data[i].owner.login,res.data[i].name);
-                repo.listBranches().then((res) => {
-                    res.data.map((item) => {
-                        if(me.toProtect[item.name]){
-                            repo.getBranch(item.name).then((value) => {
-                                unirest.put(value.data.protection_url)
-                                .headers({
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'token '+me.auth.token,
-                                    'User-Agent': 'Nydas bot'
-                                })
-                                .send({
-                                    required_status_checks: {
-                                        strict : true,
-                                        contexts : []
-                                    },
-                                    enforce_admins : null,
-                                    required_pull_request_reviews : {
-                                        dismissal_restrictions : {
-                                            users : ["Nydareld","sguesdon"],
-                                            teams : ["owners"],
+                if(me.toProtectRepos.indexOf(res.data[i].name) >= 0  ){
+                    repo.listBranches().then((res) => {
+                        res.data.map((item) => {
+                            if(me.toProtect[item.name]  ){
+                                repo.getBranch(item.name).then((value) => {
+                                    unirest.put(value.data.protection_url)
+                                    .headers({
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'token '+me.auth.token,
+                                        'User-Agent': 'Nydas bot'
+                                    })
+                                    .send({
+                                        required_status_checks: {
+                                            strict : true,
+                                            contexts : []
                                         },
-                                        require_code_owner_reviews : true,
-                                        dismiss_stale_reviews : false
-                                    },
-                                    restrictions : {
-                                        users : ["Nydareld","sguesdon","wil129"],
-                                        teams : ["owners"],
-                                    }
-                                }).end(function (response) {
+                                        enforce_admins : null,
+                                        required_pull_request_reviews : {
+                                            dismissal_restrictions : {
+                                                users : ["Nydareld","sguesdon"],
+                                                teams : ["owners"],
+                                            },
+                                            require_code_owner_reviews : true,
+                                            dismiss_stale_reviews : false
+                                        },
+                                        restrictions : {
+                                            users : ["Nydareld","sguesdon","wil129"],
+                                            teams : ["owners"],
+                                        }
+                                    }).end(function (response) {
+                                    });
                                 });
-                            });
-                        }
+                            }
+                        });
                     });
-                });
+                }
             }
             // message.channel.send("```js\n"+ me.format(repos) +"```").catch(console.error);
 
