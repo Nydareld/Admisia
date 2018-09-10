@@ -74,6 +74,9 @@
         },{
             "preg": "traitre",
             "message": "https://www.youtube.com/watch?v=JYw4MHgIDFE"
+        },{
+            "preg": "coucou",
+            "message": "https://www.youtube.com/watch?v=29CvnZPg1kc"
         }
     ],
     "decris": {
