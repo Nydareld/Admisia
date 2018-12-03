@@ -86,6 +86,12 @@
         },{
             "preg": "zboub",
             "message" : "https://www.youtube.com/watch?v=2MnmEnOi27U"
+        },{
+            "preg": "est un pro",
+            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=28s"
+        },{
+            "preg": "etes des pros",
+            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=28s"
         }
     ],
     "decris": {
