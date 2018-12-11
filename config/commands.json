@@ -88,10 +88,13 @@
             "message" : "https://www.youtube.com/watch?v=2MnmEnOi27U"
         },{
             "preg": "est un pro",
-            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=28s"
+            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=34s"
         },{
             "preg": "etes des pros",
-            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=28s"
+            "message" : "https://www.youtube.com/watch?v=BWnwl_AC2ew&t=34s"
+        },{
+            "preg": "merci",
+            "message" : "https://cdn.discordapp.com/attachments/422768116653752320/522028330564714526/th.png"
         }
     ],
     "decris": {
