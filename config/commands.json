@@ -54,7 +54,7 @@
             "preg": "samba\\sles\\s?couilles",
             "message": "https://cdn.discordapp.com/attachments/351809045067202572/413042760841691156/unknown.png"
         },{
-            "preg" : "sparrow", 
+            "preg" : "sparrow",
             "message" : "https://youtu.be/YHi1stAtzlQ"
         },{
             "preg": "zboui",
@@ -95,7 +95,13 @@
         },{
             "preg": "merci",
             "message" : "https://cdn.discordapp.com/attachments/422768116653752320/522028330564714526/th.png"
+        },{
+            "preg": "fbi",
+            "message" : "https://img-9gag-fun.9cache.com/photo/aD1W3D9_460svvp9.webm"
         }
+
+
+
     ],
     "decris": {
         "guy": [
