@@ -165,7 +165,7 @@ class Bot {
 
     addPreg(preg,callback){
         this.pregs.push({
-            "preg" : new RegExp(preg),
+            "preg" : new RegExp(preg,'i'),
             callback
         });
     }
