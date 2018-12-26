@@ -108,7 +108,7 @@
             "preg": "[Kk]appa",
             "message" : "https://cdn.discordapp.com/attachments/442977523882524684/527418073225887754/th.png"
         },{
-            "preg": "[tT]ai[sZ]ez[\s\-]vous",
+            "preg": "[tT]ai[sZ]ez[\\s\\-]vous",
             "message" : "https://tenor.com/R8js.gif"
         }
 
