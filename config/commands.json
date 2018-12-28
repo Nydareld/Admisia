@@ -161,5 +161,6 @@
                 "qui dors ivre chez des inconues"
             ]
         ]
-    }
+    },
+    "stat" : true 
 }
