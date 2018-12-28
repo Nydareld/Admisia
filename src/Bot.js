@@ -105,10 +105,6 @@ class Bot {
 
     processMessage(message){
 
-        // if(message.author.bot){
-        //     return;
-        // }
-
         let args = message.content.slice(this.config.prefix.length).trim().split(/ +/g);
 
         for (var pregPatern of this.pregs) {
