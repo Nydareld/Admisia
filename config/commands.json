@@ -110,7 +110,9 @@
         },{
             "preg": "[tT]ai[sZ]ez[\\s\\-]vous",
             "message" : "https://tenor.com/R8js.gif"
-        }
+        },{ 
+            "preg": "mort",
+            "message": "https://media.discordapp.net/attachments/320242326020554753/530074498851143701/giphy-6.gif"
 
 
 
