@@ -1,5 +1,6 @@
 let AbstractCommand = require ("../AbstractCommand.js");
 var GitHub = require('github-api');
+const octokit = require('@octokit/rest')()
 
 var unirest = require('unirest');
 
@@ -100,11 +101,18 @@ class Github extends AbstractCommand {
 
     run(message, args){
 
+        if( !this.bot.config.admins[message.author.id] ){
+            return
+        }
+
         if (args[0] == 'issues') {
             this.issues(message, args);
         }
         if (args[0] == 'repos') {
             this.repos(message, args);
+        }
+        if (args[0] == 'tag') {
+            this.tag(message, args);
         }
     }
 
@@ -226,6 +234,101 @@ class Github extends AbstractCommand {
         });
     }
 
+    tag(message, args){
+        args.shift();
+        let templates,
+            repo = args.shift(),
+            type = args.shift();
+
+        if( ["major","minor","patch"].indexOf(type) == -1 ){
+            message.channel.send("Mettez un type de version entre major, minor, et patch").catch(console.error);
+        }
+
+
+        repo = repo.split("/");
+
+        if(repo.length == 1){
+            repo = ["NRCO",repo[0]];
+        }
+
+        try {
+            templates = this.config.repos[repo[0]][repo[1]].templates;
+        } catch (e) {
+            message.channel.send("Dépot non trouvé").catch(console.error);
+            return;
+        }
+
+        octokit.authenticate({
+            type:'token',
+            token: this.auth.token
+        })
+
+        let promises = [],tagname;
+
+        for (let template of templates) {
+            for (let file of this.config.templates[template].files) {
+
+                // let releaseNumber="0.0.0"
+
+                let prom = octokit.repos.getContents({
+                    owner : repo[0],
+                    repo : repo[1],
+                    path : file.path
+                }).then((result) => {
+
+                    var content = Buffer.from(result.data.content, 'base64').toString('utf-8');
+                    var version  = new RegExp(file.versionPatern).exec(content).groups;
+                    if(type == "major"){
+                        version["minor"] = 0;
+                        version["patch"] = 0;
+                    }else if(type == "minor"){
+                        version["patch"] = 0;
+                    }
+
+                    version[type] = ""+(version[type]*1+1);
+
+                    let replacedPatern=file.versionPatern
+                        .replace(/\(\?<major>\\d\+\)\\/,version.major)
+                        .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
+                        .replace(/\(\?<patch>\\d\+\)/,version.patch);
+
+                    tagname = `v${version.major}.${version.minor}.${version.patch}`;
+
+                    content = content.replace(new RegExp(file.versionPatern),replacedPatern);
+                    console.log(Buffer.from(content).toString('base64'));
+                    octokit.repos.updateFile({
+                        owner : repo[0],
+                        repo : repo[1],
+                        path : file.path ,
+                        message : `Release ${tagname}`,
+                        content : Buffer.from(content).toString('base64'),
+                        sha:result.data.sha,
+                        committer : this.bot.config.admins[message.author.id],
+                        author : this.bot.config.admins[message.author.id]
+                    });
+
+
+                });
+
+                promises.push(prom);
+
+            }
+        }
+
+        Promise.all(promises).then(()=>{
+            let message = args.join(" ").split("\n");
+
+            octokit.repos.createRelease({
+                owner : repo[0],
+                repo : repo[1],
+                tag_name: tagname,
+                name:message.shift(),
+                body:message.join("\n")||"",
+            }).then(result => {})
+        });
+
+    }
+
     updateAllIssues(repo,issues){
         let me = this;
         return new Promise(function(resolve, reject){
@@ -234,8 +337,6 @@ class Github extends AbstractCommand {
                     me.threatIssue(repo.labels_url,issues[issue]);
                 }
             }
-
-
         });
     }
 

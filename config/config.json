@@ -1,3 +1,14 @@
 {
+    "admins" : {
 
+        "142663945939845120" : {
+            "email":"theo.guerin.pro@gmail.com",
+            "name":"Théo Guerin"
+        },
+        "422735059599228928"    : {
+            "email":"sebastian.guesdon@nrco.fr",
+            "name":"Sebastián Guesdon"
+        }
+
+    }
 }
