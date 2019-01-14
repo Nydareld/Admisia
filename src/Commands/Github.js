@@ -295,7 +295,6 @@ class Github extends AbstractCommand {
                     tagname = `v${version.major}.${version.minor}.${version.patch}`;
 
                     content = content.replace(new RegExp(file.versionPatern),replacedPatern);
-                    console.log(Buffer.from(content).toString('base64'));
                     octokit.repos.updateFile({
                         owner : repo[0],
                         repo : repo[1],
