@@ -268,8 +268,6 @@ class Github extends AbstractCommand {
         for (let template of templates) {
             for (let file of this.config.templates[template].files) {
 
-                // let releaseNumber="0.0.0"
-
                 let prom = octokit.repos.getContents({
                     owner : repo[0],
                     repo : repo[1],
@@ -277,25 +275,34 @@ class Github extends AbstractCommand {
                 }).then((result) => {
 
                     var content = Buffer.from(result.data.content, 'base64').toString('utf-8');
-                    var version  = new RegExp(file.versionPatern).exec(content).groups;
-                    if(type == "major"){
-                        version["minor"] = 0;
-                        version["patch"] = 0;
-                    }else if(type == "minor"){
-                        version["patch"] = 0;
-                    }
+                    var version = {};
 
-                    version[type] = ""+(version[type]*1+1);
+                    if(file.regexp){
 
-                    let replacedPatern=file.versionPatern
+                        var version  = new RegExp(file.regexp).exec(content).groups;
+                        if(type == "major"){
+                            version["minor"] = 0;
+                            version["patch"] = 0;
+                        }else if(type == "minor"){
+                            version["patch"] = 0;
+                        }
+
+                        version[type] = ""+(version[type]*1+1);
+
+                        let replacedPatern=file.regexp
                         .replace(/\(\?<major>\\d\+\)\\/,version.major)
                         .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
                         .replace(/\(\?<patch>\\d\+\)/,version.patch);
 
-                    tagname = `v${version.major}.${version.minor}.${version.patch}`;
+                        tagname = `v${version.major}.${version.minor}.${version.patch}`;
 
-                    content = content.replace(new RegExp(file.versionPatern),replacedPatern);
-                    octokit.repos.updateFile({
+                        content = content.replace(new RegExp(file.regexp),replacedPatern);
+
+                    }
+
+                    console.log(content);
+
+                    return octokit.repos.updateFile({
                         owner : repo[0],
                         repo : repo[1],
                         path : file.path ,
