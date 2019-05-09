@@ -69,7 +69,7 @@
             "preg": "rigolo",
             "message": "https://www.youtube.com/watch?v=OYz_BD3I9w0"
         },{
-            "preg": "run",
+            "preg": "ho\\srun",
             "message": "https://www.youtube.com/watch?v=2qm7b1GCQ74"
         },{
             "preg": "traitre",
@@ -110,14 +110,34 @@
         },{
             "preg": "[tT]ai[sZ]ez[\\s\\-]vous",
             "message" : "https://tenor.com/R8js.gif"
-        },{ 
-            "preg": "mort",
+        },{
+            "preg": "deces",
             "message": "https://media.discordapp.net/attachments/320242326020554753/530074498851143701/giphy-6.gif"
-        },{ 
+        },{
             "preg": "albatar",
             "message": "https://cdn.discordapp.com/attachments/413682799673999370/570631628909445135/unknown.png"
+        },{
+            "preg": "piquette",
+            "message": "https://www.youtube.com/watch?v=J1-JmvaT2WU"
+        },{
+            "preg": "théorie",
+            "message": "https://www.youtube.com/watch?v=XeaLbeHCf5E"
+        },{
+            "preg": "theorie",
+            "message": "https://www.youtube.com/watch?v=XeaLbeHCf5E"
+        },{
+            "preg": "on\\sen\\sreparlera",
+            "message": "https://www.youtube.com/watch?v=64QjwYDaSEw&feature=youtu.be&t=58"
+        },{
+            "preg": "biscotte",
+            "message": "https://www.youtube.com/watch?v=OLIexUW5C40"
+        },{
+            "preg": "enduis\\sd'?huile",
+            "message": "https://www.youtube.com/watch?v=ZbGtjrkCkoE"
+        },{
+            "preg": "cadeau\\sde\\snoel",
+            "message": "https://www.youtube.com/watch?v=tidCvc6iRAY"
         }
-
 
     ],
     "decris": {
@@ -166,5 +186,5 @@
             ]
         ]
     },
-    "stat" : true 
+    "stat" : true
 }
