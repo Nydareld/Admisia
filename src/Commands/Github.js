@@ -4,6 +4,24 @@ const octokit = require('@octokit/rest')()
 
 var unirest = require('unirest');
 
+function deepFind(obj, path,value) {
+    var paths = path.split('.')
+    , current = obj
+    , i;
+
+    for (i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] == undefined) {
+            return undefined;
+        } else {
+            if( i+1 == paths.length && value){
+                current[paths[i]] = value;
+            }
+            current = current[paths[i]];
+        }
+    }
+    return current;
+}
+
 class Github extends AbstractCommand {
 
     constructor(config,name, bot){
@@ -258,10 +276,10 @@ class Github extends AbstractCommand {
             return;
         }
 
-        octokit.authenticate({
+        octokit.auth = {
             type:'token',
             token: this.auth.token
-        })
+        };
 
         let promises = [],tagname;
 
@@ -275,32 +293,57 @@ class Github extends AbstractCommand {
                 }).then((result) => {
 
                     var content = Buffer.from(result.data.content, 'base64').toString('utf-8');
-                    var version = {};
+                    var version = {},data,replacedPatern;
 
-                    if(file.regexp){
+                    switch (file.type) {
+                        case "regexp":
+                            version  = new RegExp(file.regexp).exec(content).groups;
+                            if(type == "major"){
+                                version["minor"] = 0;
+                                version["patch"] = 0;
+                            }else if(type == "minor"){
+                                version["patch"] = 0;
+                            }
 
-                        var version  = new RegExp(file.regexp).exec(content).groups;
-                        if(type == "major"){
-                            version["minor"] = 0;
-                            version["patch"] = 0;
-                        }else if(type == "minor"){
-                            version["patch"] = 0;
-                        }
+                            version[type] = ""+(version[type]*1+1);
 
-                        version[type] = ""+(version[type]*1+1);
+                            replacedPatern=file.regexp
+                            .replace(/\(\?<major>\\d\+\)\\/,version.major)
+                            .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
+                            .replace(/\(\?<patch>\\d\+\)/,version.patch);
 
-                        let replacedPatern=file.regexp
-                        .replace(/\(\?<major>\\d\+\)\\/,version.major)
-                        .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
-                        .replace(/\(\?<patch>\\d\+\)/,version.patch);
+                            tagname = `v${version.major}.${version.minor}.${version.patch}`;
 
-                        tagname = `v${version.major}.${version.minor}.${version.patch}`;
+                            content = content.replace(new RegExp(file.regexp),replacedPatern);
+                            break;
 
-                        content = content.replace(new RegExp(file.regexp),replacedPatern);
+                        case "json":
+                            var data = JSON.parse(content);
+
+                            version  = new RegExp(file.regexp).exec(deepFind(data,file.property)).groups;
+                            if(type == "major"){
+                                version["minor"] = 0;
+                                version["patch"] = 0;
+                            }else if(type == "minor"){
+                                version["patch"] = 0;
+                            }
+                            version[type] = ""+(version[type]*1+1);
+
+                            replacedPatern=file.regexp
+                            .replace(/\(\?<major>\\d\+\)\\/,version.major)
+                            .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
+                            .replace(/\(\?<patch>\\d\+\)/,version.patch);
+
+                            tagname = `v${version.major}.${version.minor}.${version.patch}`;
+
+                            deepFind(data,file.property,replacedPatern);
+
+                            content = JSON.stringify( data, null, 4);
+
+                            break;
+                        default:
 
                     }
-
-                    console.log(content);
 
                     return octokit.repos.updateFile({
                         owner : repo[0],
