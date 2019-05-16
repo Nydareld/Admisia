@@ -198,6 +198,15 @@
         },{
             "preg": "cadeau\\sde\\snoel",
             "message": "https://www.youtube.com/watch?v=tidCvc6iRAY"
+        },{
+            "preg": "dans\\sle\\spoulet",
+            "message": "https://www.youtube.com/watch?v=jEX7HRBhWRs"
+        },{
+            "preg": "Gynécologue",
+            "message": "https://www.youtube.com/watch?v=7HIGu0RyPmU"
+        },{
+            "preg": "Gynecologue",
+            "message": "https://www.youtube.com/watch?v=7HIGu0RyPmU"
         }
 
     ],
