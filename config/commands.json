@@ -41,13 +41,13 @@
                         "property" : "version",
                         "regexp" : "(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)"
                     }
-                    /* ,{
+                    ,{
                         "name" : "package-lock.json",
                         "path" : "package-lock.json",
                         "type" : "json",
                         "property" : "version",
                         "regexp" : "(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)"
-                    } */
+                    }
                 ]
             },
             "pythonSetupPy" : {
