@@ -43,7 +43,7 @@ class Bot {
         let me = this;
 
         console.log("2 Connecting to external systems");
-        me.connectMongo();
+        // me.connectMongo();
         me.client = new Discord.Client();
         me.loadClientEvents();
         me.loginClient();
