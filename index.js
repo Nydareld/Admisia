@@ -1,11 +1,12 @@
+var cjson = require('cjson');
 let Bot = require("./src/Bot.js");
-let botConfig = require("./config/config.json");
-let commands = require("./config/commands.json");
+let botConfig = cjson.load("./config/config.json");
+let commands = cjson.load("./config/commands.json");
 
 let authConfig;
 
 try {
-    authConfig = require("./config/authConfig.json");
+    authConfig = cjson.load("./config/authConfig.json");
 } catch (e) {
     authConfig={};
 }
