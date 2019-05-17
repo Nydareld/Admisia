@@ -20,6 +20,7 @@ if(!config.discord ){
 }
 if (!config.discord.token) {
     config.discord.token = process.env.DISCORD_TOKEN;
+    config.github.token = process.env.GITHUB_TOKEN;
 }
 if(!config.mongo ){
     config.mongo = {};
