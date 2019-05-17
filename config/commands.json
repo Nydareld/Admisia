@@ -80,9 +80,7 @@
                 ]
             }
         }
-    }
-    /*
-    ,
+    },
     "ping" : true,
     "les2000" : true,
     "malou" : {
@@ -279,5 +277,5 @@
             ]
         ]
     },
-    "stat" : true */
+    "stat" : true
 }
