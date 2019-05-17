@@ -6,6 +6,11 @@
                     "templates" : [
                         "packageJson"
                     ]
+                },
+                "cornaline-modules" : {
+                    "templates" : [
+                        "packageJson"
+                    ]
                 }
             },
             "Nydareld" : {
