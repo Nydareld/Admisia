@@ -108,9 +108,14 @@ class Github extends AbstractCommand {
     }
 
     connectGithub(){
+
+        console.log(this.bot.config);
+
         this.auth= {
             token: this.bot.config.github.token
         };
+
+
         this.gitHubClient = new GitHub(this.auth);
         this.nrcom = this.gitHubClient.getOrganization('NRCO');
 
