@@ -1,6 +1,6 @@
 let AbstractCommand = require ("../AbstractCommand.js");
 var GitHub = require('github-api');
-const octokit = require('@octokit/rest')()
+const Octokit = require('@octokit/rest');
 
 var unirest = require('unirest');
 
@@ -113,6 +113,11 @@ class Github extends AbstractCommand {
         };
         this.gitHubClient = new GitHub(this.auth);
         this.nrcom = this.gitHubClient.getOrganization('NRCO');
+
+        this.octokit = new Octokit({
+            auth:'token '+this.auth.token
+        });
+
 
     }
 
@@ -252,6 +257,86 @@ class Github extends AbstractCommand {
         });
     }
 
+    threatOneChange(owner,repo,file,type,message){
+        return this.octokit.repos.getContents({
+            owner : owner,
+            repo : repo,
+            path : file.path
+        }).then((result) => {
+
+            var content = Buffer.from(result.data.content, 'base64').toString('utf-8');
+            var version = {},data,replacedPatern,tagname;
+
+            switch (file.type) {
+                case "regexp":
+                    version  = new RegExp(file.regexp).exec(content).groups;
+                    if(type == "major"){
+                        version["minor"] = 0;
+                        version["patch"] = 0;
+                    }else if(type == "minor"){
+                        version["patch"] = 0;
+                    }
+
+                    version[type] = ""+(version[type]*1+1);
+
+                    replacedPatern=file.regexp
+                    .replace(/\(\?<major>\\d\+\)\\/,version.major)
+                    .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
+                    .replace(/\(\?<patch>\\d\+\)/,version.patch);
+
+                    tagname = `v${version.major}.${version.minor}.${version.patch}`;
+
+                    content = content.replace(new RegExp(file.regexp),replacedPatern);
+                    break;
+
+                case "json":
+                    var data = JSON.parse(content);
+
+                    version  = new RegExp(file.regexp).exec(deepFind(data,file.property)).groups;
+                    if(type == "major"){
+                        version["minor"] = 0;
+                        version["patch"] = 0;
+                    }else if(type == "minor"){
+                        version["patch"] = 0;
+                    }
+                    version[type] = ""+(version[type]*1+1);
+
+                    replacedPatern=file.regexp
+                    .replace(/\(\?<major>\\d\+\)\\/,version.major)
+                    .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
+                    .replace(/\(\?<patch>\\d\+\)/,version.patch);
+
+                    tagname = `v${version.major}.${version.minor}.${version.patch}`;
+
+                    deepFind(data,file.property,replacedPatern);
+
+                    content = JSON.stringify( data, null, 4);
+
+                    break;
+                default:
+                    break;
+
+            }
+
+            console.log("go "+file.path);
+
+            return this.octokit.repos.updateFile({
+                owner : owner,
+                repo : repo,
+                path : file.path,
+                message : `Release ${tagname}`,
+                content : Buffer.from(content).toString('base64'),
+                sha:result.data.sha,
+                committer : this.bot.config.admins[message.author.id],
+                author : this.bot.config.admins[message.author.id]
+            }).then(()=>{
+                return Promise.resolve(tagname);
+            });
+
+
+        });
+    }
+
     tag(message, args){
         args.shift();
         let templates,
@@ -276,104 +361,46 @@ class Github extends AbstractCommand {
             return;
         }
 
-        octokit.auth = {
-            type:'token',
-            token: this.auth.token
-        };
-
-        let promises = [],tagname;
+        let files = [];
 
         for (let template of templates) {
             for (let file of this.config.templates[template].files) {
 
-                let prom = octokit.repos.getContents({
-                    owner : repo[0],
-                    repo : repo[1],
-                    path : file.path
-                }).then((result) => {
-
-                    var content = Buffer.from(result.data.content, 'base64').toString('utf-8');
-                    var version = {},data,replacedPatern;
-
-                    switch (file.type) {
-                        case "regexp":
-                            version  = new RegExp(file.regexp).exec(content).groups;
-                            if(type == "major"){
-                                version["minor"] = 0;
-                                version["patch"] = 0;
-                            }else if(type == "minor"){
-                                version["patch"] = 0;
-                            }
-
-                            version[type] = ""+(version[type]*1+1);
-
-                            replacedPatern=file.regexp
-                            .replace(/\(\?<major>\\d\+\)\\/,version.major)
-                            .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
-                            .replace(/\(\?<patch>\\d\+\)/,version.patch);
-
-                            tagname = `v${version.major}.${version.minor}.${version.patch}`;
-
-                            content = content.replace(new RegExp(file.regexp),replacedPatern);
-                            break;
-
-                        case "json":
-                            var data = JSON.parse(content);
-
-                            version  = new RegExp(file.regexp).exec(deepFind(data,file.property)).groups;
-                            if(type == "major"){
-                                version["minor"] = 0;
-                                version["patch"] = 0;
-                            }else if(type == "minor"){
-                                version["patch"] = 0;
-                            }
-                            version[type] = ""+(version[type]*1+1);
-
-                            replacedPatern=file.regexp
-                            .replace(/\(\?<major>\\d\+\)\\/,version.major)
-                            .replace(/\(\?<minor>\\d\+\)\\/,version.minor)
-                            .replace(/\(\?<patch>\\d\+\)/,version.patch);
-
-                            tagname = `v${version.major}.${version.minor}.${version.patch}`;
-
-                            deepFind(data,file.property,replacedPatern);
-
-                            content = JSON.stringify( data, null, 4);
-
-                            break;
-                        default:
-
-                    }
-
-                    return octokit.repos.updateFile({
-                        owner : repo[0],
-                        repo : repo[1],
-                        path : file.path ,
-                        message : `Release ${tagname}`,
-                        content : Buffer.from(content).toString('base64'),
-                        sha:result.data.sha,
-                        committer : this.bot.config.admins[message.author.id],
-                        author : this.bot.config.admins[message.author.id]
-                    });
-
-
-                });
-
-                promises.push(prom);
+                files.push(file);
 
             }
         }
 
-        Promise.all(promises).then(()=>{
-            let message = args.join(" ").split("\n");
+        var prom = files.reduce((acumulator,file)=>{
+            return acumulator.then(()=>{
+                return this.threatOneChange(
+                    repo[0],
+                    repo[1],
+                    file,
+                    type,
+                    message
+                );
+            });
+        },Promise.resolve());
 
-            octokit.repos.createRelease({
+
+
+        prom.then((tagname)=>{
+
+            let releaseMessage = args.join(" ").split("\n");
+
+            var name=releaseMessage.shift();
+
+            this.octokit.repos.createRelease({
                 owner : repo[0],
                 repo : repo[1],
                 tag_name: tagname,
-                name:message.shift(),
-                body:message.join("\n")||"",
-            }).then(result => {})
+                name:name,
+                body:releaseMessage.join("\n")||"",
+            }).then((result) => {
+                console.log(result);
+                message.channel.send("La release \""+name+"\" ("+tagname+") a bien été publiée. retrouvez la ici : "+result.data.html_url ).catch(console.error);
+            })
         });
 
     }

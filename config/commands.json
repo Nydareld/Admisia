@@ -9,6 +9,11 @@
                 }
             },
             "Nydareld" : {
+                "cornaline" : {
+                    "templates" : [
+                        "packageJson"
+                    ]
+                },
                 "ConfigEnv" : {
                     "templates" : [
                         "pythonSetupPy"
@@ -40,8 +45,7 @@
                         "type" : "json",
                         "property" : "version",
                         "regexp" : "(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)"
-                    }
-                    ,{
+                    },{
                         "name" : "package-lock.json",
                         "path" : "package-lock.json",
                         "type" : "json",
@@ -71,7 +75,9 @@
                 ]
             }
         }
-    },
+    }
+    /*
+    ,
     "ping" : true,
     "les2000" : true,
     "malou" : {
@@ -268,5 +274,5 @@
             ]
         ]
     },
-    "stat" : true
+    "stat" : true */
 }

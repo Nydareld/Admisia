@@ -16,6 +16,7 @@
     "dependencies": {
         "@octokit/rest": "github:octokit/rest.js",
         "cjson": "^0.5.0",
+        "deprecation": "^2.0.0",
         "discord.io": "^2.5.3",
         "discord.js": "^11.3.0",
         "fs": "0.0.1-security",
